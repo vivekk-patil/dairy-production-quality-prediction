@@ -1,0 +1,33 @@
+file,column,dtype,description
+production.csv,event_id,string,Globally unique event key (join key across all files)
+production.csv,batch_number,int,Plant batch counter; RESET several times -> NOT unique. Identifier only
+production.csv,batch_id,string,'B'+batch_number; reused after resets -> NOT unique. Never join on it alone
+production.csv,production_timestamp,datetime,Batch completion time = prediction time
+production.csv,production_line,category,L1 / L2 / L3
+production.csv,shift,category,"morning 06-14, evening 14-22, night 22-06 (by completion hour)"
+production.csv,production_volume_l,float,Litres of finished product
+production.csv,production_duration_min,float,Run time incl. downtime (minutes)
+production.csv,machine_speed,float,Line speed setting (rpm)
+production.csv,ambient_temperature,float,Plant ambient temperature (deg C)
+raw_material.csv,event_id,string,Join key
+raw_material.csv,batch_id,string,Non-unique batch label (redundant with production)
+raw_material.csv,supplier_id,category,S01-S10 (+S11 onboarded late in the timeline)
+raw_material.csv,raw_material_volume,float,Litres of raw milk consumed
+raw_material.csv,raw_material_age,float,Hours between collection and processing
+raw_material.csv,fat_percentage,float,Fat content (%)
+raw_material.csv,protein_percentage,float,Protein content (%)
+raw_material.csv,acidity,float,Titratable acidity (% lactic acid)
+raw_material.csv,raw_material_quality_score,float,Composite incoming-quality score 0-100
+machine.csv,event_id,string,Join key
+machine.csv,batch_id,string,Non-unique batch label
+machine.csv,machine_temperature,float,Pasteurisation temperature (deg C); setpoint 72
+machine.csv,pressure,float,Line pressure (bar)
+machine.csv,downtime,float,Unplanned stoppage minutes during the batch
+machine.csv,maintenance_age_days,float,Days since last maintenance of the line
+machine.csv,vibration,float,Vibration (mm/s); sensor missing more often on L3
+quality.csv,event_id,string,Join key
+quality.csv,batch_id,string,Non-unique batch label
+quality.csv,quality_test_timestamp,datetime,Lab result time (~24h after production) - determines WHEN the label becomes known
+quality.csv,moisture_percentage,float,Lab moisture (%); LATER than prediction time -> not a valid predictor; missing mostly at night
+quality.csv,quality_status,category,ACCEPTED / REJECTED (lab verdict)
+quality.csv,rejected,int,"TARGET: 1 = rejected, 0 = accepted"
